@@ -13,3 +13,10 @@ mainWidget::~mainWidget()
     delete ui;
 }
 
+
+void mainWidget::on_b_setting_clicked()
+{
+    SettingDialog setting_dialog;
+    setting_dialog.show();
+    setting_dialog.exec();
+}
