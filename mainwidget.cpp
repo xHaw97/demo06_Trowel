@@ -53,6 +53,7 @@ void mainWidget::fresh_settings(){
         log_print_and_record(QString::fromLocal8Bit("读取已有设置文件：")+setting_file_path);
         log_print_and_record(QString::fromLocal8Bit("ip：")+ip_str);
         log_print_and_record(QString::fromLocal8Bit("com：")+com_str);
+        qDebug()<<ip_str;
     }else{
         file.close();
         //直接赋默认值
@@ -98,10 +99,14 @@ void mainWidget::fresh_settings(){
  */
 QString mainWidget::delete_enter(QString str){
     int n = str.size(),i=0;
-    for (;i<n;i++) {
-        if(str[i]=='\n')break;
+    while (i<str.size()) {
+        if(str[i]=='\n'||str[i]=='\r')str.remove(i,1);
+        else i++;
     }
-    str.remove(i,1);
+//    for (;i<n;i++) {
+//        if(str[i]=='\n')break;
+//    }
+//    str.remove(i,1);
     return str;
 }
 
