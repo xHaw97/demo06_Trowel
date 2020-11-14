@@ -5,6 +5,8 @@
 #include "settingdialog.h"
 #include <QFile>
 #include <QDebug>
+#include <QDateTime>
+#include <QDir>
 
 
 QT_BEGIN_NAMESPACE
@@ -28,6 +30,8 @@ private slots:
     void on_b_setting_clicked();
 
 
+    void on_b_log_keeping_clicked();
+
 private:
     Ui::mainWidget *ui;
 
@@ -38,6 +42,7 @@ private:
     QVector<QString> buttons_command;
     int button_num;
     QString log;
+    SettingDialog setting_dialog;
 
     QString delete_enter(QString str);
 
