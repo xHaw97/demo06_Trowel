@@ -16,6 +16,8 @@ mainWidget::mainWidget(QWidget *parent)
     buttons_command = QVector<QString>(button_num,"");
     //刷新设置
     fresh_settings();
+
+    connect(&setting_dialog,&SettingDialog::refresh,this,&mainWidget::fresh_settings);
 }
 
 mainWidget::~mainWidget()
@@ -26,7 +28,7 @@ mainWidget::~mainWidget()
 
 void mainWidget::on_b_setting_clicked()
 {
-    SettingDialog setting_dialog;
+    setting_dialog.fresh_settings();
     setting_dialog.show();
     setting_dialog.exec();
 }
@@ -93,20 +95,16 @@ void mainWidget::fresh_settings(){
 
 
 /**
- * @brief mainWidget::delete_enter：去除字符串中第一个'\n'
+ * @brief mainWidget::delete_enter：去除字符串中'\n'、'\r'
  * @param str：输入字符串
- * @return 去回车后得字符串
+ * @return 去后得字符串
  */
 QString mainWidget::delete_enter(QString str){
-    int n = str.size(),i=0;
+    int i=0;
     while (i<str.size()) {
         if(str[i]=='\n'||str[i]=='\r')str.remove(i,1);
         else i++;
     }
-//    for (;i<n;i++) {
-//        if(str[i]=='\n')break;
-//    }
-//    str.remove(i,1);
     return str;
 }
 
@@ -119,4 +117,30 @@ void mainWidget::log_print_and_record(QString tmp_log){
     log.append(tmp_log);
     log.append('\n');
     ui->log_browser->append(tmp_log);
+}
+
+void mainWidget::on_b_log_keeping_clicked()
+{
+    QDateTime current_date_time =QDateTime::currentDateTime();
+    QString current_date =current_date_time.toString("yyyyMMddhhmmss");
+//    qDebug()<<current_date;
+    QString dir_str = "../log";
+
+    // 检查目录是否存在，若不存在则新建
+    QDir dir;
+    if (!dir.exists(dir_str))
+    {
+        bool res = dir.mkpath(dir_str);
+        qDebug() << QString::fromLocal8Bit("新建目录是否成功:") << res;
+    }
+
+
+
+    QString log_path = "../log/"+current_date+"_log.txt";
+    QFile file(log_path);
+    if(file.open(QIODevice::WriteOnly)){
+        file.write(log.toLocal8Bit());
+    }
+    file.close();
+
 }
